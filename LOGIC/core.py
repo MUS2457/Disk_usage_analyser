@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 def scan_folder_subfolder(folder_path):
     files_paths = []
@@ -18,4 +19,105 @@ def scan_folder_subfolder(folder_path):
 
 
 def file_counter(folder_path):
-    return len(scan_folder_subfolder(folder_path))
+    return len(scan_folder_subfolder(folder_path)) if os.path.isdir(folder_path) else 0
+
+def file_size(folder_path):
+    files_path = scan_folder_subfolder(folder_path)
+    files_size = {}
+
+    if not files_path:
+        return files_size
+
+    for file in files_path:
+        size = os.path.getsize(file)
+
+        if size not in files_size:
+            files_size[size] = []
+
+        files_size[size].append(file)
+
+    return files_size
+
+
+def file_count_by_size(folder_path):
+    files_size = file_size(folder_path)
+    counter = {}
+
+    if not files_size:
+        return files_size
+
+    for size, files in files_size.items():
+
+        counter[size] = len(files)
+
+    return counter
+
+def deplicate_files(folder_path):
+    counter = file_count_by_size(folder_path)
+    deplicate = {}
+
+    if not counter:
+        return deplicate
+
+    for size, file_count in counter.items():
+
+        if file_count > 1:
+            deplicate[size] = file_count
+
+    return deplicate
+
+def count_by_extension(folder_path):
+    files_path = scan_folder_subfolder(folder_path)
+    extensions_by_type = {
+        "document": [".txt", ".pdf", ".docx", ".xlsx", ".csv"],
+        "image": [".png", ".jpg", ".jpeg", ".gif"],
+        "audio": [".mp3", ".wav"],
+        "video": [".mp4", ".mov"],
+        "archive": [".zip", ".rar"],
+        "code": [".py", ".js", ".html", ".css"],
+        "ps4_pkg" : [".pkg", ".iso", ".cso" ],
+        "pc app" : [".exe"]
+    }
+    extension_counter = {}
+
+    if not files_path:
+        return extension_counter
+
+    for file in files_path:
+
+        file_name = os.path.basename(file)  # get file name only
+        _, extension = os.path.splitext(file_name)
+        extension = extension.lower()
+
+        for types , extensions in extensions_by_type.items():
+
+            if extension in extensions:
+
+                if extension not in extension_counter:
+                    extension_counter[extension] = 1
+                else :
+                    extension_counter[extension] += 1
+
+    return extension_counter
+
+
+def last_modification_by_day(folder_path):
+    files_path = scan_folder_subfolder(folder_path)
+    days = {}
+
+    if not files_path:
+        return days
+
+    now = datetime.now()  # present
+
+    for file in files_path:
+        m_time = os.path.getmtime(file)   # gives time in seconds since 1/1/1970
+        modified = datetime.fromtimestamp(m_time)  # transform it into readable date
+        days_ago = (now - modified).days
+
+        days[os.path.basename(file)] = f"{days_ago} days ago"
+
+    return days
+
+
+
