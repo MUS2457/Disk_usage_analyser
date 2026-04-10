@@ -15,7 +15,6 @@ def search_file(folder_path):
             print("Please enter a valid file name or 'exit' to quit")
             continue
 
-        # Collect all matching files
         matches = []
         for file in files_path:
             file_name = os.path.basename(file)
@@ -61,3 +60,41 @@ def searched_file_size(folder_path):
             return results
         else:
             print("No files found with that name. Try again.")
+
+def searched_by_extension(folder_path):
+    files_path = scan_folder_subfolder(folder_path)
+
+    while True:
+        user = input("Please enter the extension of the file (.png) or 'exit' to quit: ").strip()
+
+        if user.lower() == 'exit':
+            print("Exiting...")
+            break
+
+        elif not user:
+            print("Please enter a valid file extension or 'exit' to quit")
+            continue
+
+        matches = []
+
+        if not user.startswith('.'):
+             user = "." + user
+
+        for file in files_path:
+            file_name = os.path.basename(file)
+            _, extension = os.path.splitext(file_name)
+
+            if user.lower() == extension.lower():
+                matches.append(file)
+
+        if matches:
+            print(f"Found {len(matches)} file(s):")
+            for m in matches:
+                print(" -", m)
+            return matches
+
+        else:
+            print("No files found with that extension. Try again.")
+
+
+
