@@ -18,7 +18,9 @@ def search_file(folder_path):
         matches = []
         for file in files_path:
             file_name = os.path.basename(file)
-            if user.lower() == file_name.lower():
+            name, extension = os.path.splitext(file_name) # remove extension limitation
+
+            if user.lower() == name.lower():
                 matches.append(file)
 
         if matches:

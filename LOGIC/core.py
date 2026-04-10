@@ -75,31 +75,36 @@ def count_by_extension(folder_path):
         "video": [".mp4", ".mov"],
         "archive": [".zip", ".rar"],
         "code": [".py", ".js", ".html", ".css"],
-        "ps4_pkg" : [".pkg", ".iso", ".cso" ],
-        "pc app" : [".exe", ".lnk"]
+        "ps4_pkg": [".pkg", ".iso", ".cso"],
+        "pc_app": [".exe"]
     }
+
     extension_counter = {}
 
-    if not files_path:
-        return extension_counter
-
     for file in files_path:
-
-        file_name = os.path.basename(file)  # get file name only
+        file_name = os.path.basename(file)
         _, extension = os.path.splitext(file_name)
         extension = extension.lower()
 
-        for types , extensions in extensions_by_type.items():
+        found = False
 
+        for types, extensions in extensions_by_type.items():
             if extension in extensions:
-
                 if extension not in extension_counter:
-                    extension_counter[extension] = {"types" : types, "count" : 1}
-                else :
+                    extension_counter[extension] = {"types": types, "count": 1}
+                else:
                     extension_counter[extension]["count"] += 1
+                found = True
+                break
+
+        # if extension not found in any type
+        if not found:
+            if extension not in extension_counter:
+                extension_counter[extension] = {"types": "other", "count": 1}
+            else:
+                extension_counter[extension]["count"] += 1
 
     return extension_counter
-
 
 def last_modification_by_day(folder_path):
     files_path = scan_folder_subfolder(folder_path)
