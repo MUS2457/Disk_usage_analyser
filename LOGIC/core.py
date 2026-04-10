@@ -76,7 +76,7 @@ def count_by_extension(folder_path):
         "archive": [".zip", ".rar"],
         "code": [".py", ".js", ".html", ".css"],
         "ps4_pkg" : [".pkg", ".iso", ".cso" ],
-        "pc app" : [".exe"]
+        "pc app" : [".exe", ".lnk"]
     }
     extension_counter = {}
 
@@ -94,7 +94,7 @@ def count_by_extension(folder_path):
             if extension in extensions:
 
                 if extension not in extension_counter:
-                    extension_counter[extension] = {"count" :1 , "types" : types}
+                    extension_counter[extension] = {"types" : types, "count" : 1}
                 else :
                     extension_counter[extension]["count"] += 1
 
